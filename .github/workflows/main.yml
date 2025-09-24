@@ -15,9 +15,9 @@ jobs:
       run: |
         docker pull flyway/flyway
         docker run --rm -v $(pwd)/migrations:/flyway/sql flyway/flyway migrate \
-        -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
-        -user=${{ secrets.DB_USER }} \
-        -password=${{ secrets.DB_PASSWORD }}
+        -url=jdbc:postgresql://158.160.198.112:5432/store \
+        -user=test_user \
+        -password=test_password
 
     ### Этот шаг оставьте без изменений
     - name: Download and setup autotests binaries

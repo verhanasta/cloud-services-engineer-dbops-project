@@ -13,10 +13,9 @@ jobs:
     #### Добавьте шаг с Flyway-миграциями
     - name: Migrations with Docker
       run: |
-        docker pull flyway/flyway:9.22.0
-        docker run --rm \
-          -v $(pwd)/migrations:/flyway/sql \
-          flyway/flyway:9.22.0 migrate \
+        echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        docker pull flyway/flyway
+        docker run --rm -v $(pwd)/migrations:/flyway/sql flyway/flyway migrate \
           -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
           -user=${{ secrets.DB_USER }} \
           -password=${{ secrets.DB_PASSWORD }}

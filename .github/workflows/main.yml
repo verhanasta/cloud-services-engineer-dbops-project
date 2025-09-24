@@ -8,17 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     #### Добавьте шаг с Flyway-миграциями
     - name: Migrations with Docker
       run: |
-        echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-        docker pull flyway/flyway
-        docker run --rm -v $(pwd)/migrations:/flyway/sql flyway/flyway migrate \
-          -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
-          -user=${{ secrets.DB_USER }} \
-          -password=${{ secrets.DB_PASSWORD }}
+        docker pull flyway/flyway:9-alpine
+        docker run --rm -v $(pwd)/migrations:/flyway/sql flyway/flyway:9-alpine migrate \
+        -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
+        -user=${{ secrets.DB_USER }} \
+        -password=${{ secrets.DB_PASSWORD }}
 
     ### Этот шаг оставьте без изменений
     - name: Download and setup autotests binaries

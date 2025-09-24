@@ -11,15 +11,15 @@ jobs:
       uses: actions/checkout@v2
 
     #### Добавьте шаг с Flyway-миграциями
-    - name: Flyway Migrations
-      uses: flyway/flyway-runner@v1
-      with:
-        flywayVersion: 9.22.0
-        flywayConfig:
-          url: jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}
-          user: ${{ secrets.DB_USER }}
-          password: ${{ secrets.DB_PASSWORD }}
-          locations: filesystem:migrations
+    - name: Migrations with Docker
+      run: |
+        docker pull flyway/flyway:9.22.0
+        docker run --rm \
+          -v $(pwd)/migrations:/flyway/sql \
+          flyway/flyway:9.22.0 migrate \
+          -url=jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
+          -user=${{ secrets.DB_USER }} \
+          -password=${{ secrets.DB_PASSWORD }}
 
     ### Этот шаг оставьте без изменений
     - name: Download and setup autotests binaries

@@ -1,18 +1,18 @@
--- Модификация таблицы товаров
+-- Изменение таблицы товаров
 ALTER TABLE product
     ADD COLUMN price DOUBLE PRECISION;
 
--- Перенос цен из таблицы product_info
+-- Передача цен из таблицы product_info
 UPDATE product p
 SET    price = pi.price
 FROM   product_info pi
 WHERE  p.id = pi.product_id;
 
--- Модификация таблицы заказов
+-- Изменение таблицы orders
 ALTER TABLE orders
     ADD COLUMN date_created DATE;
 
--- Перенос дат из таблицы orders_date
+-- Передача дат из таблицы orders_date
 UPDATE orders o
 SET    date_created = od.date_created,
        status = COALESCE(o.status, od.status) -- Если status был NULL, берем из orders_date
@@ -26,13 +26,13 @@ ALTER TABLE product
 ALTER TABLE orders
     ADD PRIMARY KEY (id);
 
--- Установка внешних ключей для обеспечения целостности данных
+-- Установка внешних ключей для обеспечения целостности информации
 ALTER TABLE order_product
     ADD CONSTRAINT fk_order_product_product
         FOREIGN KEY (product_id) REFERENCES product(id),
     ADD CONSTRAINT fk_order_product_order
         FOREIGN KEY (order_id) REFERENCES orders(id);
 
--- Удаление избыточных таблиц после переноса данных
+-- Удаление лишних таблиц
 DROP TABLE product_info;
 DROP TABLE orders_date;

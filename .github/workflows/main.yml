@@ -25,9 +25,7 @@ jobs:
           -user="${{ secrets.DB_USER }}" \
           -password="${{ secrets.DB_PASSWORD }}" \
           -locations="filesystem:$(pwd)/migrations" \
-          -ignorePendingMigrations=true \
-          -ignoreMissingMigrations=true \
-          -ignoreFutureMigrations=true
+          -flyway.ignoreMigrationPatterns=*:pending,*:missing,*:future
         
         
         ### Этот шаг оставьте без изменений

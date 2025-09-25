@@ -13,5 +13,5 @@ ALTER TABLE order_product
     ADD CONSTRAINT fk_orders_id FOREIGN KEY (order_id) REFERENCES orders (id);
 --
 ---- Удаление таблиц
---DROP TABLE product_info;
---DROP TABLE orders_date;
+DROP TABLE product_info;
+DROP TABLE orders_date;

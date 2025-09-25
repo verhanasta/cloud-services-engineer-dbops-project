@@ -28,7 +28,7 @@ jobs:
 
     - name: Run Migrations
       run: |
-        ./flyway-9.22.0/flyway migrate \
+        ./flyway-11.13.1/flyway migrate \
           -url="jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \
           -user="${{ secrets.DB_USER }}" \
           -password="${{ secrets.DB_PASSWORD }}" \

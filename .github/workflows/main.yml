@@ -26,13 +26,14 @@ jobs:
 #          -password="${{ secrets.DB_PASSWORD }}" \
 #          -locations="filesystem:$(pwd)/migrations"
 
-    - name: Clean and migrate
+    - name: Clean and migrate with clean enabled
       run: |
         ./flyway-11.1.1/flyway clean \
         -url="jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \
         -user="${{ secrets.DB_USER }}" \
         -password="${{ secrets.DB_PASSWORD }}" \
-        -locations="filesystem:$(pwd)/migrations"
+        -locations="filesystem:$(pwd)/migrations" \
+        -cleanDisabled="false"
         
         ./flyway-11.1.1/flyway migrate \
         -url="jdbc:postgresql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}" \

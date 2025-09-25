@@ -1,31 +1,38 @@
--- Обработка таблицы product: Добавление колонки "price" с типом число с плавающей точкой и Назначение колонки "id" первичным ключом таблицы
+-- Модификация таблицы товаров
 ALTER TABLE product
-    ADD price DOUBLE PRECISION,
-    ADD PRIMARY KEY (id);
+    ADD COLUMN price DOUBLE PRECISION;
 
--- Цена из таблицы product_info
+-- Перенос цен из таблицы product_info
 UPDATE product p
 SET    price = pi.price
 FROM   product_info pi
 WHERE  p.id = pi.product_id;
 
--- Обработка таблицы orders. Добавление колонки "date_created" с типом дата и назначение колонки "id" первичным ключом таблицы
+-- Модификация таблицы заказов
 ALTER TABLE orders
-    ADD date_created DATE,
-    ADD PRIMARY KEY (id);
+    ADD COLUMN date_created DATE;
 
--- Даты из таблицы orders_date
+-- Перенос дат из таблицы orders_date
 UPDATE orders o
 SET    date_created = od.date_created,
        status = COALESCE(o.status, od.status) -- Если status был NULL, берем из orders_date
 FROM   orders_date od
 WHERE  o.id = od.order_id;
 
--- Добавление внешних ключей для целостности информации
-ALTER TABLE order_product
-    ADD CONSTRAINT fk_product_id FOREIGN KEY (product_id) REFERENCES product (id),
-    ADD CONSTRAINT fk_orders_id FOREIGN KEY (order_id) REFERENCES orders (id);
+-- Установка первичных ключей
+ALTER TABLE product
+    ADD PRIMARY KEY (id);
 
--- Удаление таблиц
+ALTER TABLE orders
+    ADD PRIMARY KEY (id);
+
+-- Установка внешних ключей для обеспечения целостности данных
+ALTER TABLE order_product
+    ADD CONSTRAINT fk_order_product_product
+        FOREIGN KEY (product_id) REFERENCES product(id),
+    ADD CONSTRAINT fk_order_product_order
+        FOREIGN KEY (order_id) REFERENCES orders(id);
+
+-- Удаление избыточных таблиц после переноса данных
 DROP TABLE product_info;
 DROP TABLE orders_date;
